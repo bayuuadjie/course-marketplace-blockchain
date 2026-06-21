@@ -1,0 +1,9 @@
+{
+  "name": "konektor",
+  "version": "1.0.0",
+  "description": "Library konektor Web3 (MetaMask + ethers.js) untuk DApp marketplace kursus online",
+  "main": "index.js",
+  "dependencies": {
+    "ethers": "^6.13.0"
+  }
+}
