@@ -14,7 +14,7 @@ export default function Navbar() {
       <div className="container navbar-inner">
         <Link href="/" className="brand">
           <span className="brand-mark">{"{"}</span>
-          Kelaskan
+          Kelaz-King
           <span className="brand-mark">{"}"}</span>
         </Link>
 

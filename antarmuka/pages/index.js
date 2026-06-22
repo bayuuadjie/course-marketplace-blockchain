@@ -95,8 +95,7 @@ export default function Home() {
         <div className="hero-eyebrow">marketplace kursus berbasis blockchain</div>
         <h1>Belajar apa pun, bayar langsung ke pengajarnya — tanpa perantara.</h1>
         <p>
-          Setiap kursus tercatat sebagai entri permanen di blockchain. Bayar dengan ETH simulasi
-          lewat MetaMask, dapatkan e-sertifikat yang juga terverifikasi on-chain.
+          Setiap kursus tercatat sebagai entri permanen di blockchain. Bayar dengan ETH dan dapatkan e-sertifikat yang juga terverifikasi on-chain.
         </p>
       </section>
 
