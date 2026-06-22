@@ -1,11 +1,12 @@
 import { useState } from "react";
 
-const MAX_SIZE_BYTES = 250 * 1024; // 250KB - batas wajar agar transaksi tidak terlalu berat
+const MAX_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
 
 export default function ThumbnailUpload({ value, onChange }) {
   const [error, setError] = useState("");
+  const [uploading, setUploading] = useState(false);
 
-  function handleFile(e) {
+  async function handleFile(e) {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -14,24 +15,44 @@ export default function ThumbnailUpload({ value, onChange }) {
       return;
     }
     if (file.size > MAX_SIZE_BYTES) {
-      setError("Ukuran gambar terlalu besar. Gunakan gambar di bawah 250KB.");
+      setError("Ukuran gambar terlalu besar. Gunakan gambar di bawah 5MB.");
       return;
     }
 
     setError("");
-    const reader = new FileReader();
-    reader.onload = () => onChange(reader.result); // hasilnya data URI base64
-    reader.readAsDataURL(file);
+    setUploading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch("/api/upload-thumbnail", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      onChange(data.ipfsUrl);
+    } catch (err) {
+      console.error(err);
+      setError(err.message || "Gagal mengunggah gambar.");
+    } finally {
+      setUploading(false);
+    }
   }
 
   return (
     <div>
-      <input type="file" accept="image/*" onChange={handleFile} />
+      <input type="file" accept="image/*" onChange={handleFile} disabled={uploading} />
       <p className="hint">
-        Gambar disimpan langsung di blockchain (base64), maksimal 250KB. Alternatif: tempel URL
-        gambar di kolom &quot;Link Materi&quot; jika ingin lebih ringan.
+        Gambar diunggah ke IPFS (decentralized storage), hanya URL yang disimpan di blockchain.
       </p>
       {error && <p className="alert alert-error">{error}</p>}
+      {uploading && <p className="alert">Mengunggah gambar ke IPFS...</p>}
       {value && (
         <img src={value} alt="Preview thumbnail" className="thumbnail-preview" />
       )}
